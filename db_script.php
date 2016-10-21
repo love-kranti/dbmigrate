@@ -11,7 +11,7 @@ $start_user_id = $data_set['start_user_id'];
 $end_user_id = $data_set['end_user_id'];
 
 $select_user = "SELECT id,firstname,middlename,lastname,email,mobile FROM 
-                tbl_userdetails where id between $start_user_id and $end_user_id 
+                tbl_userdetails where id between $start_user_id and $end_user_id and is_dsa !=1
                 and id in (select user_id as id from tbl_getaccounts group by user_id);";
 $result_user = mysql_query_with_throw($select_user);
 
@@ -23,7 +23,7 @@ while($user_row = mysql_fetch_assoc($result_user)){
     $user_create_array  = array('firstName'=>$user_row['firstname'],
                                 'middleName'=>$user_row['middlename'],
                                 'lastName'=>$user_row['lastname'],
-                                'email'=>$user_row['email'],
+                                'email'=>rtrim($user_row['email']),
                                 'phoneNumber'=>$user_row['mobile'],
                                  );
     global $java_base_url;

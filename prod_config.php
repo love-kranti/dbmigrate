@@ -16,4 +16,5 @@ $java_base_url = "http://javasitenew-1018212193.ap-southeast-1.elb.amazonaws.com
 $java_admin_user_name = "admin";
 $java_admin_password = "password";
 include("functions.php");
+
 ?>
