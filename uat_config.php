@@ -1,10 +1,10 @@
 <?php
 $java_admin = "admin";
 $java_pswd = "password";
-$link=mysql_connect("bluepiclear.ceofrws5syj6.ap-southeast-1.rds.amazonaws.com:3306", "bluepiroot", "Plat!num9enL");
+$link=mysql_connect("cmduatnew.cehf5u2edwls.ap-southeast-1.rds.amazonaws.com:3306", "cmduat", "cmduat123");
     if($link == FALSE) throw new Exception('Error Connecting');
 
-$db=mysql_select_db("clearmyd_gtndbptl_new"); 
+$db=mysql_select_db("cmduat");
 if($db == FALSE) throw new Exception('Error selecting database.');
 
 $log_file_name = "/home/ubuntu/db_migrate.log";

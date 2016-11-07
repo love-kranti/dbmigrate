@@ -10,9 +10,10 @@ $con_id= $data_set['id'];
 $start_user_id = $data_set['start_user_id'];
 $end_user_id = $data_set['end_user_id'];
 
-$select_user = "SELECT id,firstname,middlename,lastname,email,mobile FROM 
-                tbl_userdetails where id between $start_user_id and $end_user_id and is_dsa !=1
-                and id in (select user_id as id from tbl_getaccounts group by user_id);";
+$select_user = "SELECT distinct user_id as id,first_name as firstname,middle_name as middlename,last_name as lastname,email_id as email,mobile FROM 
+                tbl_getscore where id between ".$start_user_id." and ".$end_user_id."  
+                and user_id in (select user_id as id from tbl_getaccounts group by user_id) and mobile not in (select mobile from log_request) order by id desc;";
+
 $result_user = mysql_query_with_throw($select_user);
 
 // create user post create array
@@ -30,8 +31,8 @@ while($user_row = mysql_fetch_assoc($result_user)){
     $url = $java_base_url."/user";
     $data = json_encode($user_create_array);
     $headers = array('Content-Type: application/json');
-    $create_migrate_entry = "insert into log_request (`user_id`,`name`,`status`,`mobile`) 
-                                values ('$user_id','$user_name','Started','$mobile');";
+    $create_migrate_entry = "insert into log_request (user_id,name,status,mobile) 
+                                values (".$user_id.",'".$user_name."','Started','".$mobile."');";
     $create_request = mysql_query_with_throw($create_migrate_entry);
     $log_id = mysql_insert_id();
     $user_create_response = httpUtilityPost($url,$data,$headers);
@@ -68,7 +69,7 @@ while($user_row = mysql_fetch_assoc($result_user)){
     // experian start entry
     $exp_start_query = "SELECT email_id,dob,mobile,first_name,middle_name,last_name,city,flatno,building,stateid,
                          pincode,pan,telephone,telephone_type,passport,voterid,aadhar,licence,gender from 
-                         tbl_getscore where user_id=$user_id order by id desc limit 1;";
+                         tbl_getscore where user_id=".$user_id." order by id desc limit 1;";
     $result_exp_data  = mysql_query_with_throw($exp_start_query);
     $exp_data = mysql_fetch_assoc($result_exp_data);
     
@@ -119,7 +120,7 @@ while($user_row = mysql_fetch_assoc($result_user)){
                                  
     $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
     
-    $html_file_query = "SELECT `file_name` FROM `tbl_experian_data` WHERE user_id =$user_id order by id desc limit 1;";
+    $html_file_query = "SELECT `file_name` FROM `tbl_experian_data` WHERE user_id =".$user_id." order by id desc limit 1;";
     $result_file = mysql_query_with_throw($html_file_query);
     $file_data = mysql_fetch_assoc($result_file);
     $user_file_path = $file_data['file_name'];
@@ -176,10 +177,10 @@ while($user_row = mysql_fetch_assoc($result_user)){
                                     $user_name,"Process Report",$con_id,$user_fail_id,$user_id);
     
     
-    mysql_query_with_throw("update log_request set status='Success' where user_id = $user_id;");
+    mysql_query_with_throw("update log_request set status='Success' where user_id =".$user_id." ;");
     
     // check offer and post offer 
-        
+//    sleep(10);    
 }
                                    
 ?>
