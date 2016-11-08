@@ -19,7 +19,7 @@ $start_user_id = $data_set['start_user_id'];
 $end_user_id = $data_set['end_user_id'];
 
 $select_user = "SELECT distinct id,mobile,owner FROM tbl_userdetails where owner !='' and 
-                id between ".$start_user_id." and ".$end_user_id.";";
+                id between ".$start_user_id." and ".$end_user_id." and mobile !=  '';";
                
 $result_user = mysql_query_with_throw($select_user);
 
@@ -28,7 +28,10 @@ while($user_row = mysql_fetch_assoc($result_user)){
     $user_id = $user_row['id'];
     $mobile = $user_row['mobile'];
     $owner_id = $user_row['owner'];
-    
+    $create_migrate_entry = "insert into log_request (user_id,status,mobile) 
+                                values (".$user_id.",'Started','".$mobile."');";
+    $create_request = mysql_query_with_throw($create_migrate_entry);
+    $log_id = mysql_insert_id();
     $user_login_array  = array('userId'=>$mobile,
                                 'password'=>"12345"
                                  );
@@ -51,9 +54,11 @@ while($user_row = mysql_fetch_assoc($result_user)){
    
     
     $exp_start_array = array('ownerId'=>$exp_start_array[$owner_id]);
-                                 
+                              
     $url = $java_base_url."/user/self?authtoken=".$java_user_session_id;
+    createLogs(__FILE__, __LINE__,"url".$url ) ;
     $data = json_encode($exp_start_array);
+    createLogs(__FILE__, __LINE__, "data".$data) ;
     $headers = array('Content-Type: application/json');
                     
                     
