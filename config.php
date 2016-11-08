@@ -13,7 +13,7 @@ if(!file_exists($log_file_name)){
     $f = fopen($log_file_name, "a+");
     fclose($f);
 }
-$java_base_url = "http://localhost:8080/java";
+$java_base_url = "http://javadev-370467541.ap-southeast-1.elb.amazonaws.com/java";
 $java_admin_user_name = "admin";
 $java_admin_password = "password";
 include("functions.php");

@@ -48,6 +48,29 @@ function httpUtilityPost($url,$data,$headers)
     curl_close($ch);
     return $return_array;
 }
+function httpUtilityPut($url,$data,$headers)
+{
+    $ch = curl_init();
+    createLogs(__FILE__,__LINE__,$url.$data."http post api request");
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    // we want headers
+    curl_setopt($ch, CURLOPT_NOBODY, false);
+    // we don't need body
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    $response = curl_exec($ch);
+    $http_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    createLogs(__FILE__,__LINE__,$response."http post api response status code");
+    $return_array = array("status" => $http_status_code,"api_response" => $response);
+    curl_close($ch);
+    return $return_array;
+}
 function log_response($log_id,$name,$response,$action,$status_code){
     $insert_response = "insert into response_log (`log_id`,`user_name`,`response`,`action`,`status_code`) 
                                 values('$log_id','$name','$response','$action','$status_code');";

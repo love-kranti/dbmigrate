@@ -10,9 +10,9 @@ $con_id= $data_set['id'];
 $start_user_id = $data_set['start_user_id'];
 $end_user_id = $data_set['end_user_id'];
 
-$select_user = "SELECT id,firstname,middlename,lastname,email,mobile FROM 
-                tbl_userdetails where id between $start_user_id and $end_user_id and is_dsa is null
-                and id not in (select user_id as id from tbl_getaccounts group by user_id);";
+$select_user = "SELECT distinct  id,firstname as firstname,middlename as middlename,lastname as lastname,email as email,mobile FROM
+                tbl_userdetails where id between ".$start_user_id." and ".$end_user_id."
+                 and mobile not in (select mobile from log_request) order by id desc;"; 
 $result_user = mysql_query_with_throw($select_user);
 
 // create user post create array
@@ -46,7 +46,7 @@ while($user_row = mysql_fetch_assoc($result_user)){
     }
     $java_user = json_decode($response);
     $java_user_id = $java_user->id;
-    
+  /*  
     $user_login_array  = array('userId'=>$java_user_id,
                                 'password'=>"12345"
                                  );
@@ -113,9 +113,9 @@ while($user_row = mysql_fetch_assoc($result_user)){
         
         $update_status = check_error_code_log_response($api_status_code,$response,$log_id,
                                         $user_name,"Experian Start Attempt",$con_id,$user_fail_id,$user_id);
-        
+        */
         mysql_query_with_throw("update log_request set status='Success' where user_id = $user_id;");
-    }
+   // }
     // check offer and post offer 
         
 }
