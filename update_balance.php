@@ -42,7 +42,7 @@ while (($data = fgetcsv($csvFile, 1000, ",")) !== FALSE) {
     
     $api_status_code = $user_exp_response['status'];
     $response = $user_exp_response['api_response'];
-    echo $response;
+   
 }
 
     
