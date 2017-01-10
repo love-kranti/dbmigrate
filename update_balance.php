@@ -1,8 +1,8 @@
 <?php
 include("config.php");
 $file_name = $_GET['file_name'];
-
- $csvFile = fopen("/home/love/$file_name", 'r');
+global $file_path;
+ $csvFile = fopen($file_path.$file_name, 'r');
                 
 //skip first line
 fgetcsv($csvFile);
